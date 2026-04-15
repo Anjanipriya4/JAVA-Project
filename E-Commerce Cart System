@@ -1,0 +1,143 @@
+import java.util.*;
+
+class Product {
+    int id;
+    String name;
+    double price;
+
+    Product(int id, String name, double price) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+    }
+
+    void display() {
+        System.out.println(id + " | " + name + " | ₹" + price);
+    }
+}
+
+class CartItem {
+    Product product;
+    int quantity;
+
+    CartItem(Product product, int quantity) {
+        this.product = product;
+        this.quantity = quantity;
+    }
+
+    double getTotal() {
+        return product.price * quantity;
+    }
+}
+
+public class Main {
+
+    static Scanner sc = new Scanner(System.in);
+
+    static ArrayList<Product> catalog = new ArrayList<>();
+    static ArrayList<CartItem> cart = new ArrayList<>();
+
+    public static void main(String[] args) {
+
+        // Product Catalog
+        catalog.add(new Product(1, "Laptop", 50000));
+        catalog.add(new Product(2, "Phone", 20000));
+        catalog.add(new Product(3, "Headphones", 2000));
+        catalog.add(new Product(4, "Keyboard", 1500));
+
+        while (true) {
+            System.out.println("\n1.View Products 2.Add to Cart 3.Remove 4.View Cart 5.Checkout 6.Exit");
+
+            if (!sc.hasNextInt()) break;
+            int choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1: // View Products
+                    for (Product p : catalog) {
+                        p.display();
+                    }
+                    break;
+
+                case 2: // Add to Cart
+                    System.out.print("Enter Product ID: ");
+                    int pid = sc.nextInt();
+
+                    Product p = findProduct(pid);
+                    if (p != null) {
+                        System.out.print("Quantity: ");
+                        int qty = sc.nextInt();
+
+                        cart.add(new CartItem(p, qty));
+                        System.out.println("Added to cart!");
+                    }
+                    break;
+
+                case 3: // Remove Item
+                    System.out.print("Enter Product ID to remove: ");
+                    int rid = sc.nextInt();
+
+                    Iterator<CartItem> it = cart.iterator();
+                    boolean removed = false;
+
+                    while (it.hasNext()) {
+                        if (it.next().product.id == rid) {
+                            it.remove();
+                            removed = true;
+                            System.out.println("Item removed!");
+                            break;
+                        }
+                    }
+
+                    if (!removed) System.out.println("Item not found!");
+                    break;
+
+                case 4: // View Cart
+                    if (cart.isEmpty()) {
+                        System.out.println("Cart is empty!");
+                    } else {
+                        for (CartItem c : cart) {
+                            System.out.println(c.product.name + 
+                                               " x" + c.quantity + 
+                                               " = ₹" + c.getTotal());
+                        }
+                    }
+                    break;
+
+                case 5: // Checkout
+                    double total = 0;
+
+                    for (CartItem c : cart) {
+                        total += c.getTotal();
+                    }
+
+                    System.out.println("Total before discount: ₹" + total);
+
+                    // Apply discount
+                    if (total > 50000) {
+                        total *= 0.9; // 10% discount
+                        System.out.println("10% discount applied!");
+                    }
+
+                    System.out.println("Final Bill: ₹" + total);
+                    System.out.println("Checkout successful!");
+                    cart.clear();
+                    break;
+
+                case 6:
+                    return;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+
+    static Product findProduct(int id) {
+        for (Product p : catalog) {
+            if (p.id == id) return p;
+        }
+        System.out.println("Product not found!");
+        return null;
+    }
+}
