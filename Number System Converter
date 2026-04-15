@@ -1,0 +1,84 @@
+import java.util.*;
+
+public class Main {
+
+    static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+
+        while (true) {
+            System.out.println("\n--- Number System Converter ---");
+            System.out.println("1. Decimal to Binary/Octal/Hex");
+            System.out.println("2. Binary to Decimal");
+            System.out.println("3. Octal to Decimal");
+            System.out.println("4. Hexadecimal to Decimal");
+            System.out.println("5. Exit");
+
+            if (!sc.hasNextInt()) break;
+            int choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1: // Decimal conversions
+                    System.out.print("Enter Decimal number: ");
+                    if (!sc.hasNextInt()) {
+                        System.out.println("Invalid input!");
+                        sc.next();
+                        break;
+                    }
+                    int dec = sc.nextInt();
+
+                    System.out.println("Binary: " + Integer.toBinaryString(dec));
+                    System.out.println("Octal: " + Integer.toOctalString(dec));
+                    System.out.println("Hex: " + Integer.toHexString(dec).toUpperCase());
+                    break;
+
+                case 2: // Binary to Decimal
+                    System.out.print("Enter Binary number: ");
+                    String bin = sc.next();
+
+                    if (!bin.matches("[01]+")) {
+                        System.out.println("Invalid Binary!");
+                        break;
+                    }
+
+                    int decFromBin = Integer.parseInt(bin, 2);
+                    System.out.println("Decimal: " + decFromBin);
+                    break;
+
+                case 3: // Octal to Decimal
+                    System.out.print("Enter Octal number: ");
+                    String oct = sc.next();
+
+                    if (!oct.matches("[0-7]+")) {
+                        System.out.println("Invalid Octal!");
+                        break;
+                    }
+
+                    int decFromOct = Integer.parseInt(oct, 8);
+                    System.out.println("Decimal: " + decFromOct);
+                    break;
+
+                case 4: // Hex to Decimal
+                    System.out.print("Enter Hexadecimal number: ");
+                    String hex = sc.next();
+
+                    if (!hex.matches("[0-9A-Fa-f]+")) {
+                        System.out.println("Invalid Hexadecimal!");
+                        break;
+                    }
+
+                    int decFromHex = Integer.parseInt(hex, 16);
+                    System.out.println("Decimal: " + decFromHex);
+                    break;
+
+                case 5:
+                    System.out.println("Exiting...");
+                    return;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+}
