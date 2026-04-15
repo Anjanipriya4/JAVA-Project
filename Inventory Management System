@@ -1,0 +1,135 @@
+import java.util.*;
+
+class Product {
+    int id;
+    String name;
+    int quantity;
+    double price;
+
+    Product(int id, String name, int quantity, double price) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
+    void display() {
+        System.out.println(id + " | " + name + " | Qty: " + quantity + 
+                           " | Price: " + price);
+    }
+
+    double totalValue() {
+        return quantity * price;
+    }
+}
+
+public class Main {
+
+    static Scanner sc = new Scanner(System.in);
+    static ArrayList<Product> inventory = new ArrayList<>();
+
+    public static void main(String[] args) {
+
+        while (true) {
+            System.out.println("\n1.Add Product 2.Update Stock 3.Remove Product 4.Display 5.Total Value 6.Exit");
+
+            if (!sc.hasNextInt()) break;
+            int choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1: // Add Product
+                    System.out.print("ID: ");
+                    int id = sc.nextInt();
+                    sc.nextLine();
+
+                    System.out.print("Name: ");
+                    String name = sc.nextLine();
+
+                    System.out.print("Quantity: ");
+                    int qty = sc.nextInt();
+
+                    System.out.print("Price: ");
+                    double price = sc.nextDouble();
+
+                    inventory.add(new Product(id, name, qty, price));
+                    System.out.println("Product added!");
+                    break;
+
+                case 2: // Update Stock
+                    Product p1 = findProduct();
+                    if (p1 != null) {
+                        System.out.print("Enter quantity to add/remove: ");
+                        int change = sc.nextInt();
+                        p1.quantity += change;
+
+                        if (p1.quantity < 0) p1.quantity = 0;
+
+                        System.out.println("Stock updated!");
+                    }
+                    break;
+
+                case 3: // Remove Product
+                    System.out.print("Enter ID to remove: ");
+                    int rid = sc.nextInt();
+
+                    Iterator<Product> it = inventory.iterator();
+                    boolean removed = false;
+
+                    while (it.hasNext()) {
+                        if (it.next().id == rid) {
+                            it.remove();
+                            removed = true;
+                            System.out.println("Product removed!");
+                            break;
+                        }
+                    }
+
+                    if (!removed) System.out.println("Product not found!");
+                    break;
+
+                case 4: // Display Inventory
+                    if (inventory.isEmpty()) {
+                        System.out.println("Inventory empty!");
+                    } else {
+                        for (Product p : inventory) {
+                            p.display();
+
+                            // Low stock alert
+                            if (p.quantity < 5) {
+                                System.out.println("⚠ Low Stock Alert!");
+                            }
+                        }
+                    }
+                    break;
+
+                case 5: // Total Inventory Value
+                    double total = 0;
+                    for (Product p : inventory) {
+                        total += p.totalValue();
+                    }
+                    System.out.println("Total Inventory Value: " + total);
+                    break;
+
+                case 6:
+                    return;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+
+    // Helper method
+    static Product findProduct() {
+        System.out.print("Enter Product ID: ");
+        int id = sc.nextInt();
+
+        for (Product p : inventory) {
+            if (p.id == id) return p;
+        }
+
+        System.out.println("Product not found!");
+        return null;
+    }
+}
