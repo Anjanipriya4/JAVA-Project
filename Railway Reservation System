@@ -1,0 +1,104 @@
+import java.util.*;
+
+class Ticket {
+    int ticketId;
+    String name;
+    int seatsBooked;
+
+    Ticket(int ticketId, String name, int seatsBooked) {
+        this.ticketId = ticketId;
+        this.name = name;
+        this.seatsBooked = seatsBooked;
+    }
+
+    void display() {
+        System.out.println("Ticket ID: " + ticketId +
+                           " | Name: " + name +
+                           " | Seats: " + seatsBooked);
+    }
+}
+
+public class Main {
+
+    static Scanner sc = new Scanner(System.in);
+
+    static int totalSeats = 50;
+    static int availableSeats = 50;
+    static int ticketCounter = 1000;
+
+    static ArrayList<Ticket> tickets = new ArrayList<>();
+
+    public static void main(String[] args) {
+
+        while (true) {
+            System.out.println("\n1.Book Ticket 2.Cancel Ticket 3.View Availability 4.View Tickets 5.Exit");
+
+            if (!sc.hasNextInt()) break;
+            int choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1: // Book Ticket
+                    System.out.print("Enter Name: ");
+                    sc.nextLine();
+                    String name = sc.nextLine();
+
+                    System.out.print("Seats required: ");
+                    int seats = sc.nextInt();
+
+                    if (seats <= availableSeats) {
+                        int ticketId = ++ticketCounter;
+
+                        tickets.add(new Ticket(ticketId, name, seats));
+                        availableSeats -= seats;
+
+                        System.out.println("Booking successful! Ticket ID: " + ticketId);
+                    } else {
+                        System.out.println("Not enough seats available! ❌");
+                    }
+                    break;
+
+                case 2: // Cancel Ticket
+                    System.out.print("Enter Ticket ID: ");
+                    int tid = sc.nextInt();
+
+                    Iterator<Ticket> it = tickets.iterator();
+                    boolean cancelled = false;
+
+                    while (it.hasNext()) {
+                        Ticket t = it.next();
+                        if (t.ticketId == tid) {
+                            availableSeats += t.seatsBooked;
+                            it.remove();
+                            cancelled = true;
+                            System.out.println("Ticket cancelled!");
+                            break;
+                        }
+                    }
+
+                    if (!cancelled) System.out.println("Ticket not found!");
+                    break;
+
+                case 3: // View Availability
+                    System.out.println("Available Seats: " + availableSeats + "/" + totalSeats);
+                    break;
+
+                case 4: // View All Tickets
+                    if (tickets.isEmpty()) {
+                        System.out.println("No bookings found!");
+                    } else {
+                        for (Ticket t : tickets) {
+                            t.display();
+                        }
+                    }
+                    break;
+
+                case 5:
+                    return;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+}
