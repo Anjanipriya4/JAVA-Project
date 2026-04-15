@@ -1,0 +1,105 @@
+import java.util.*;
+
+class Book {
+    int id;
+    String title;
+    String author;
+    boolean isIssued;
+
+    Book(int id, String title, String author) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.isIssued = false;
+    }
+
+    void display() {
+        System.out.println(id + " | " + title + " | " + author + 
+                " | " + (isIssued ? "Issued" : "Available"));
+    }
+}
+public class Main {
+    static Scanner sc = new Scanner(System.in);
+    static ArrayList<Book> books = new ArrayList<>();
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println("\n1.Add Book 2.Issue 3.Return 4.Display 5.Search 6.Exit");
+            if (!sc.hasNextInt()) break;
+            int choice = sc.nextInt();
+            switch (choice) {
+                    System.out.print("Book ID: ");
+                    int id = sc.nextInt();
+                    sc.nextLine();
+
+                    System.out.print("Title: ");
+                    String title = sc.nextLine();
+
+                    System.out.print("Author: ");
+                    String author = sc.nextLine();
+
+                    books.add(new Book(id, title, author));
+                    System.out.println("Book added!");
+                    break;
+                    Book b1 = findBook();
+                    if (b1 != null) {
+                        if (b1.isIssued) {
+                            System.out.println("Book already issued! ❌");
+                        } else {
+                            b1.isIssued = true;
+                            System.out.println("Book issued successfully!");
+                        }
+                    }
+                    break;
+                    Book b2 = findBook();
+                    if (b2 != null) {
+                        if (!b2.isIssued) {
+                            System.out.println("Book is not issued!");
+                        } else {
+                            b2.isIssued = false;
+                            System.out.println("Book returned successfully!");
+                        }
+                    }
+                    break;
+                    System.out.println("\nAvailable Books:");
+                    boolean found = false;
+                    for (Book b : books) {
+                        if (!b.isIssued) {
+                            b.display();
+                            found = true;
+                        }
+                    }
+                    if (!found) System.out.println("No available books.");
+                    break;
+                    sc.nextLine();
+                    System.out.print("Enter title/author: ");
+                    String key = sc.nextLine().toLowerCase();
+
+                    boolean match = false;
+                    for (Book b : books) {
+                        if (b.title.toLowerCase().contains(key) ||
+                            b.author.toLowerCase().contains(key)) {
+                            b.display();
+                            match = true;
+                        }
+                    }
+                    if (!match) System.out.println("No matching books.");
+                    break;
+                    return;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+    static Book findBook() {
+        System.out.print("Enter Book ID: ");
+        int id = sc.nextInt();
+
+        for (Book b : books) {
+            if (b.id == id) return b;
+        }
+
+        System.out.println("Book not found!");
+        return null;
+    }
+}
