@@ -1,0 +1,126 @@
+import java.util.*;
+
+class Account {
+    int accNo;
+    int pin;
+    double balance;
+    double dailyWithdrawn;
+    ArrayList<String> history;
+
+    static final double DAILY_LIMIT = 20000; // daily withdrawal limit
+
+    Account(int accNo, int pin, double balance) {
+        this.accNo = accNo;
+        this.pin = pin;
+        this.balance = balance;
+        this.dailyWithdrawn = 0;
+        this.history = new ArrayList<>();
+        history.add("Account created with balance: " + balance);
+    }
+
+    boolean authenticate(int enteredPin) {
+        return this.pin == enteredPin;
+    }
+
+    void deposit(double amount) {
+        balance += amount;
+        history.add("Deposited: " + amount);
+        System.out.println("Deposit successful!");
+    }
+
+    void withdraw(double amount) {
+        if (amount > balance) {
+            System.out.println("Insufficient balance! ❌");
+            return;
+        }
+
+        if (dailyWithdrawn + amount > DAILY_LIMIT) {
+            System.out.println("Daily withdrawal limit exceeded! ❌");
+            return;
+        }
+
+        balance -= amount;
+        dailyWithdrawn += amount;
+        history.add("Withdrawn: " + amount);
+        System.out.println("Withdrawal successful!");
+    }
+
+    void checkBalance() {
+        System.out.println("Current Balance: " + balance);
+    }
+
+    void miniStatement() {
+        System.out.println("\n--- Mini Statement ---");
+        for (String h : history) {
+            System.out.println(h);
+        }
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Sample account
+        Account user = new Account(101, 1234, 50000);
+
+        int attempts = 0;
+        boolean loggedIn = false;
+
+        // PIN Authentication (max 3 attempts)
+        while (attempts < 3) {
+            System.out.print("Enter PIN: ");
+            int enteredPin = sc.nextInt();
+
+            if (user.authenticate(enteredPin)) {
+                loggedIn = true;
+                break;
+            } else {
+                attempts++;
+                System.out.println("Wrong PIN! Attempts left: " + (3 - attempts));
+            }
+        }
+
+        if (!loggedIn) {
+            System.out.println("Card blocked! ❌");
+            return;
+        }
+
+        // ATM Menu
+        while (true) {
+            System.out.println("\n1.Deposit 2.Withdraw 3.Balance 4.Mini Statement 5.Exit");
+
+            if (!sc.hasNextInt()) break;
+            int choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1: // Deposit
+                    System.out.print("Enter amount: ");
+                    user.deposit(sc.nextDouble());
+                    break;
+
+                case 2: // Withdraw
+                    System.out.print("Enter amount: ");
+                    user.withdraw(sc.nextDouble());
+                    break;
+
+                case 3: // Balance
+                    user.checkBalance();
+                    break;
+
+                case 4: // Mini Statement
+                    user.miniStatement();
+                    break;
+
+                case 5:
+                    System.out.println("Thank you!");
+                    return;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+}
