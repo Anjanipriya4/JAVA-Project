@@ -1,0 +1,93 @@
+import java.util.*;
+
+class Student {
+    int id;
+    String name;
+    ArrayList<Integer> marks;
+
+    Student(int id, String name, ArrayList<Integer> marks) {
+        this.id = id;
+        this.name = name;
+        this.marks = marks;
+    }
+
+    double average() {
+        int sum = 0;
+        for (int m : marks) sum += m;
+        return (double) sum / marks.size();
+    }
+
+    String grade() {
+        double avg = average();
+        if (avg >= 90) return "A";
+        else if (avg >= 75) return "B";
+        else if (avg >= 60) return "C";
+        else if (avg >= 50) return "D";
+        else return "F";
+    }
+
+    void display() {
+        System.out.println(id + " " + name + " " + marks +
+                " Avg:" + average() + " Grade:" + grade());
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<Student> list = new ArrayList<>();
+
+        while (true) {
+            System.out.println("\n1 Add\n2 Display\n3 Search\n4 Exit");
+
+            if (!sc.hasNextInt()) break;
+            int ch = sc.nextInt();
+
+            if (ch == 1) {
+                System.out.print("ID: ");
+                int id = sc.nextInt();
+                sc.nextLine();
+
+                System.out.print("Name: ");
+                String name = sc.nextLine();
+
+                System.out.print("Subjects: ");
+                int n = sc.nextInt();
+
+                ArrayList<Integer> marks = new ArrayList<>();
+                for (int i = 0; i < n; i++) {
+                    marks.add(sc.nextInt());
+                }
+
+                list.add(new Student(id, name, marks));
+            }
+
+            else if (ch == 2) {
+                for (Student s : list) s.display();
+            }
+
+            else if (ch == 3) {
+                System.out.print("Search ID: ");
+                int sid = sc.nextInt();
+
+                boolean found = false;
+                for (Student s : list) {
+                    if (s.id == sid) {
+                        s.display();
+                        found = true;
+                    }
+                }
+                if (!found) System.out.println("Not found");
+            }
+
+            else if (ch == 4) {
+                break;
+            }
+
+            else {
+                System.out.println("Invalid choice");
+            }
+        }
+    }
+}
