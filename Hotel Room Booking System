@@ -1,0 +1,101 @@
+import java.util.*;
+
+class Room {
+    int roomNo;
+    String category; // AC / Non-AC
+    boolean isBooked;
+    String customerName;
+
+    Room(int roomNo, String category) {
+        this.roomNo = roomNo;
+        this.category = category;
+        this.isBooked = false;
+        this.customerName = "";
+    }
+
+    void display() {
+        System.out.println("Room: " + roomNo + 
+                           " | Type: " + category + 
+                           " | Status: " + (isBooked ? "Booked" : "Available"));
+    }
+}
+
+public class Main {
+
+    static Scanner sc = new Scanner(System.in);
+    static ArrayList<Room> rooms = new ArrayList<>();
+
+    public static void main(String[] args) {
+
+        // Predefined rooms
+        rooms.add(new Room(101, "AC"));
+        rooms.add(new Room(102, "AC"));
+        rooms.add(new Room(201, "Non-AC"));
+        rooms.add(new Room(202, "Non-AC"));
+
+        while (true) {
+            System.out.println("\n1.View Rooms 2.Book Room 3.Cancel Booking 4.Exit");
+
+            if (!sc.hasNextInt()) break;
+            int choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1: // Show Rooms
+                    for (Room r : rooms) {
+                        r.display();
+                    }
+                    break;
+
+                case 2: // Book Room
+                    System.out.print("Enter Room Number: ");
+                    int bookNo = sc.nextInt();
+
+                    Room r1 = findRoom(bookNo);
+                    if (r1 != null) {
+                        if (r1.isBooked) {
+                            System.out.println("Room already booked! ❌");
+                        } else {
+                            sc.nextLine();
+                            System.out.print("Enter Customer Name: ");
+                            r1.customerName = sc.nextLine();
+                            r1.isBooked = true;
+                            System.out.println("Room booked successfully!");
+                        }
+                    }
+                    break;
+
+                case 3: // Cancel Booking
+                    System.out.print("Enter Room Number: ");
+                    int cancelNo = sc.nextInt();
+
+                    Room r2 = findRoom(cancelNo);
+                    if (r2 != null) {
+                        if (!r2.isBooked) {
+                            System.out.println("Room is not booked!");
+                        } else {
+                            r2.isBooked = false;
+                            r2.customerName = "";
+                            System.out.println("Booking cancelled!");
+                        }
+                    }
+                    break;
+
+                case 4:
+                    return;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+
+    // Helper method
+    static Room findRoom(int number) {
+        for (Room r : rooms) {
+            if (r.roomNo == number) return r;
+        }
+        System.out.println("Room not found!");
+        return null;
+    }
+}
